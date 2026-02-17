@@ -1,3 +1,2 @@
-name: project_base
-desc: External tree for AESD assignments
-
+name: PROJECT
+desc: My external Buildroot tree
