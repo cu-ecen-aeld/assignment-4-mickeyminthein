@@ -13,10 +13,13 @@ jobs:
 
       - name: Set up SSH for Buildroot package fetch
         run: |
+          echo "User: $(whoami)"
+          echo "HOME: $HOME"
           mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" | tr -d '\r' > "$HOME/.ssh/id_rsa"
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan github.com >> ~/.ssh/known_hosts
-          git config --global url."git@github.com:".insteadOf "https://github.com/"
+          git config --global core.sshCommand \
+            "ssh -i $HOME/.ssh/id_rsa -o UserKnownHostsFile=$HOME/.ssh/known_hosts -o StrictHostKeyChecking=yes"
 
       - run: ./full-test.sh
